@@ -23,27 +23,25 @@ using Gtk;
 
 public class ClipboardItemStore : Gtk.ListStore
 {
-    private static Clipboard GetClipboard()
-    {
-        var atom = Gdk.Atom.Intern("CLIPBOARD", false);
-        return Clipboard.Get(atom);
-    }
-
     public ClipboardItemStore() : base(typeof(string))
     {
-        var clipboard = GetClipboard();
-        clipboard.OwnerChange += OnOwnerChangeEvent;
     }
 
-    private void OnOwnerChangeEvent(object sender, OwnerChangeArgs a)
+    public void AddText(string text)
     {
-        var clipboard = GetClipboard();
-        clipboard.RequestText(AppendText);
+        InsertWithValues(0, text);
     }
 
-    private void AppendText(Clipboard clipboard, string text)
+    public string GetText(int row)
     {
-        AppendValues(text);
+        TreeIter rootIter;
+        GetIterFirst(out rootIter);
+        return GetValue(rootIter, row) as string;
+    }
+
+    public int Count
+    {
+        get { return IterNChildren(); }
     }
 }
 

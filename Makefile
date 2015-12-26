@@ -15,9 +15,12 @@ all:
 		| sed -r 's/\(([0-9]+),([0-9]+)\)/:\1:\2/'; \
 		exit "$${PIPESTATUS[0]}"
 
+clean:
+	rm -rf bin obj
+
 run: all
 	mono --debug ./obj/x86/$(CONF)/$(PROJ).exe
 
-clean:
-	rm -rf bin obj
+test tests: all
+	MONO_IOMAP=all nunit-console --config=$(CONF) $(PROJ).csproj
 

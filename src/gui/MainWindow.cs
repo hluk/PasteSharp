@@ -57,6 +57,8 @@ public partial class MainWindow : Gtk.Window
         var store = new ClipboardItemStore();
         tree.Model = store;
 
+        ClipboardNotifier.registerCallback(store.AddText);
+
         DeleteEvent += OnDeleteEvent;
     }
 
