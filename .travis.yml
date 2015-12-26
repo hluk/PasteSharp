@@ -1,0 +1,11 @@
+language: csharp
+
+solution: CopySharp.sln
+
+install:
+  - sudo apt-get install libgtk-3-dev
+  - make nuget
+
+script:
+  - make tests
+

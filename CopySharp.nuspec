@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package>
+    <metadata>
+        <id>$id$</id>
+        <version>$version$</version>
+        <title>$title$</title>
+        <authors>$author$</authors>
+        <owners>$author$</owners>
+        <licenseUrl>http://www.gnu.org/licenses/gpl-3.0.html</licenseUrl>
+        <projectUrl>https://github.com/hluk/CopySharp</projectUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>Small clipboard manager</description>
+        <releaseNotes></releaseNotes>
+        <copyright>Copyright 2015</copyright>
+        <tags>clipboard</tags>
+    </metadata>
+</package>
