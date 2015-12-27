@@ -39,11 +39,11 @@ public class ClipboardItemStoreTest : Assert {
         public void AppendItems()
         {
             store.AddText("1");
-            Assert.AreEqual(store.Count, 1);
-            Assert.AreEqual(store.GetText(0), "1");
+            Assert.AreEqual(1, store.Count);
+            Assert.AreEqual("1", store.GetText(0));
 
             store.AddText("2");
-            Assert.AreEqual(store.Count, 2);
-            Assert.AreEqual(store.GetText(0), "2");
+            Assert.AreEqual(2, store.Count);
+            Assert.AreEqual("2", store.GetText(0));
         }
 }
