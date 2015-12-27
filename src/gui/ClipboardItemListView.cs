@@ -23,14 +23,22 @@ using Gtk;
 
 public class ClipboardItemListView : Gtk.TreeView
 {
+    ClipboardItemStore store;
+
     public ClipboardItemListView()
     {
         HeadersVisible = true;
         AppendColumn("Items", new CellRendererText(), "text", 0);
 
-        var store = new ClipboardItemStore();
+        store = new ClipboardItemStore();
         Model = store;
 
         ClipboardNotifier.registerCallback(store.AddText);
+    }
+
+    protected override void OnRowActivated(TreePath path, TreeViewColumn column)
+    {
+        var text = store.GetText(path);
+        ClipboardNotifier.GetClipboard().Text = text;
     }
 }

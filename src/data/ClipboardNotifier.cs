@@ -25,7 +25,7 @@ public class ClipboardNotifier
 {
     public delegate void TextChangedCallback(string Text);
 
-    private static Clipboard GetClipboard()
+    public static Clipboard GetClipboard()
     {
         var atom = Gdk.Atom.Intern("CLIPBOARD", false);
         return Clipboard.Get(atom);

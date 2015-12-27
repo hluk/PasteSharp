@@ -39,6 +39,13 @@ public class ClipboardItemStore : Gtk.ListStore
         return GetValue(rootIter, row) as string;
     }
 
+    public string GetText(TreePath path)
+    {
+        TreeIter iter;
+        GetIter(out iter, path);
+        return GetValue(iter, 0) as string;
+    }
+
     public int Count
     {
         get { return IterNChildren(); }
