@@ -51,6 +51,8 @@ public class ClipboardItemListView : Gtk.TreeView
     {
         HeadersVisible = true;
 
+        Selection.Mode = SelectionMode.Multiple;
+
         int columnId = -1;
 
         var renderer = new CellRendererText();
@@ -69,9 +71,46 @@ public class ClipboardItemListView : Gtk.TreeView
         ClipboardNotifier.registerCallback(store.AddText);
     }
 
+    protected override bool OnKeyPressEvent(Gdk.EventKey ev)
+    {
+        switch (ev.Key) {
+            case Gdk.Key.Return:
+            case Gdk.Key.KP_Enter:
+                OnSelectionActivated();
+                return true;
+
+            default:
+                return base.OnKeyPressEvent(ev);
+        }
+    }
+
     protected override void OnRowActivated(TreePath path, TreeViewColumn column)
     {
         var text = store.GetText(path);
+        SetClipboardText(text);
+    }
+
+    private void OnSelectionActivated()
+    {
+        var text = "";
+
+        Selection.SelectedForeach(
+                (model, path, iter) => {
+                    text += store.GetText(path) + "\n";
+                });
+
+        SetClipboardText(text.Substring(0, text.Length - 1));
+    }
+
+    private void Iconify()
+    {
+        if (Window != null)
+            Window.Iconify();
+    }
+
+    private void SetClipboardText(string text)
+    {
         ClipboardNotifier.GetClipboard().Text = text;
+        Iconify();
     }
 }
