@@ -76,7 +76,11 @@ public class ClipboardItemListView : Gtk.TreeView
         switch (ev.Key) {
             case Gdk.Key.Return:
             case Gdk.Key.KP_Enter:
-                OnSelectionActivated();
+                activateSelection();
+                return true;
+
+            case Gdk.Key.Delete:
+                deleteSelection();
                 return true;
 
             default:
@@ -90,7 +94,7 @@ public class ClipboardItemListView : Gtk.TreeView
         SetClipboardText(text);
     }
 
-    private void OnSelectionActivated()
+    private void activateSelection()
     {
         var text = "";
 
@@ -100,6 +104,12 @@ public class ClipboardItemListView : Gtk.TreeView
                 });
 
         SetClipboardText(text.Substring(0, text.Length - 1));
+    }
+
+    private void deleteSelection()
+    {
+        var paths = Selection.GetSelectedRows();
+        store.RemoveItems(paths);
     }
 
     private void Iconify()

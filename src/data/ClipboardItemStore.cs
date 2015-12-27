@@ -32,23 +32,54 @@ public class ClipboardItemStore : Gtk.ListStore
         InsertWithValues(0, text, DateTime.Now);
     }
 
+    public void RemoveItems(TreePath[] paths)
+    {
+        // Remove rows from bottom to top so as not to invalidate paths.
+        int[] rows = new int[paths.Length];
+        for (int i = 0; i < paths.Length; ++i)
+            rows[i] = paths[i].Indices[0];
+        Array.Sort(rows, (lhs, rhs) => rhs.CompareTo(lhs));
+
+        foreach (int row in rows) {
+            var iter = GetIter(row);
+            Remove(ref iter);
+        }
+    }
+
+    public string GetText(TreeIter iter)
+    {
+        return GetValue(iter, column:0) as string;
+    }
+
     public string GetText(int row)
     {
-        TreeIter rootIter;
-        GetIterFirst(out rootIter);
-        return GetValue(rootIter, row) as string;
+        return GetText(GetIter(row));
     }
 
     public string GetText(TreePath path)
     {
-        TreeIter iter;
-        GetIter(out iter, path);
-        return GetValue(iter, 0) as string;
+        return GetText(GetIter(path));
     }
 
     public int Count
     {
         get { return IterNChildren(); }
+    }
+
+    public TreeIter GetIter(TreePath path)
+    {
+        TreeIter iter;
+        GetIter(out iter, path);
+        return iter;
+    }
+
+    public TreeIter GetIter(int row)
+    {
+        TreeIter rootIter;
+        GetIterFirst(out rootIter);
+
+        var path = new TreePath(new int[]{row});
+        return GetIter(path);
     }
 }
 
