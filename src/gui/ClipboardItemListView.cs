@@ -25,13 +25,46 @@ public class ClipboardItemListView : Gtk.TreeView
 {
     ClipboardItemStore store;
 
+    private static void SetColumnSortable(TreeViewColumn column, int columnId)
+    {
+        column.SortIndicator = true;
+        column.SortColumnId = columnId;
+        column.Clickable = true;
+    }
+
+    private static void SetDateTimeRendererText(
+            TreeViewColumn column, CellRenderer renderer, ITreeModel model, TreeIter iter)
+    {
+        var dateTime = (DateTime)model.GetValue(iter, 1);
+        var textRenderer = (CellRendererText)renderer;
+        textRenderer.Text = dateTime.ToString();
+    }
+
+    private static int CompareDateTime(ITreeModel model, TreeIter lhs, TreeIter rhs)
+    {
+        var l = (DateTime)model.GetValue(lhs, 1);
+        var r = (DateTime)model.GetValue(rhs, 1);
+        return DateTime.Compare(l, r);
+    }
+
     public ClipboardItemListView()
     {
         HeadersVisible = true;
-        AppendColumn("Items", new CellRendererText(), "text", 0);
+
+        int columnId = -1;
+
+        var renderer = new CellRendererText();
+
+        var textColumn = AppendColumn("Items", renderer, "text", 0);
+        SetColumnSortable(textColumn, ++columnId);
+
+        var dateTimeColumn = AppendColumn("Created", renderer, SetDateTimeRendererText);
+        SetColumnSortable(dateTimeColumn, ++columnId);
 
         store = new ClipboardItemStore();
-        Model = store;
+        var sortableStore = new TreeModelSort(store);
+        sortableStore.SetSortFunc(1, CompareDateTime);
+        Model = sortableStore;
 
         ClipboardNotifier.registerCallback(store.AddText);
     }

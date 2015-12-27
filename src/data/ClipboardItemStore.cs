@@ -23,13 +23,13 @@ using Gtk;
 
 public class ClipboardItemStore : Gtk.ListStore
 {
-    public ClipboardItemStore() : base(typeof(string))
+    public ClipboardItemStore() : base(typeof(string), typeof(DateTime))
     {
     }
 
     public void AddText(string text)
     {
-        InsertWithValues(0, text);
+        InsertWithValues(0, text, DateTime.Now);
     }
 
     public string GetText(int row)
