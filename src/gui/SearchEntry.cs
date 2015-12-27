@@ -18,18 +18,13 @@
 */
 
 using System;
+
 using Gtk;
 
-namespace CopySharp
+public class SearchEntry : Gtk.Entry
 {
-    class MainClass
+    public SearchEntry()
     {
-        public static void Main(string[] args)
-        {
-            Application.Init();
-            MainWindow win = new MainWindow();
-            win.Show();
-            Application.Run();
-        }
+        SetProperty("placeholder-text", new GLib.Value("Search"));
     }
 }

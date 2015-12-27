@@ -18,46 +18,30 @@
 */
 
 using System;
-using System.IO;
 using System.Reflection;
 
 using Gtk;
-using UI = Gtk.Builder.ObjectAttribute;
 
-public partial class MainWindow : Gtk.Window
+public class MainWindow : Gtk.Window
 {
-    //[UI] Gtk.Entry searchEntry;
-    [UI] Gtk.TreeView tree;
-
-    //ClipboardItemStore store;
-
-    private static string MainWindowUi()
+    static private string GetWindowTitle()
     {
-        var assembly = Assembly.GetExecutingAssembly();
-        var resourceName = "CopySharp.interfaces.MainWindow.glade";
-
-        using (Stream stream = assembly.GetManifestResourceStream(resourceName)) {
-            using (StreamReader reader = new StreamReader(stream)) {
-                return reader.ReadToEnd();
-            }
-        }
+        return Assembly.GetExecutingAssembly().GetName().Name;
     }
 
-    public static MainWindow Create()
+    public MainWindow() : base(GetWindowTitle())
     {
-        var builder = new Builder();
-        builder.AddFromString(MainWindowUi());
-        return new MainWindow(builder, builder.GetObject("window1").Handle);
-    }
+        var box = new VBox();
+        Add(box);
 
-    protected MainWindow(Builder builder, IntPtr handle) : base(handle)
-    {
-        builder.Autoconnect(this);
+        var searchEntry = new SearchEntry();
+        box.PackStart(searchEntry, expand:false, fill:true, padding:0);
 
-        var store = new ClipboardItemStore();
-        tree.Model = store;
+        var clipboardItemListView = new ClipboardItemListView();
+        box.PackStart(clipboardItemListView, expand:true, fill:true, padding:0);
 
-        ClipboardNotifier.registerCallback(store.AddText);
+        SetSizeRequest(250, 350);
+        ShowAll();
 
         DeleteEvent += OnDeleteEvent;
     }

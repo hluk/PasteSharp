@@ -18,18 +18,19 @@
 */
 
 using System;
+
 using Gtk;
 
-namespace CopySharp
+public class ClipboardItemListView : Gtk.TreeView
 {
-    class MainClass
+    public ClipboardItemListView()
     {
-        public static void Main(string[] args)
-        {
-            Application.Init();
-            MainWindow win = new MainWindow();
-            win.Show();
-            Application.Run();
-        }
+        HeadersVisible = true;
+        AppendColumn("Items", new CellRendererText(), "text", 0);
+
+        var store = new ClipboardItemStore();
+        Model = store;
+
+        ClipboardNotifier.registerCallback(store.AddText);
     }
 }
