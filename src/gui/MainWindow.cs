@@ -24,6 +24,9 @@ using Gtk;
 
 public class MainWindow : Gtk.Window
 {
+    SearchEntry searchEntry;
+    ClipboardItemListView clipboardItemListView;
+
     static private string GetWindowTitle()
     {
         return Assembly.GetExecutingAssembly().GetName().Name;
@@ -34,10 +37,11 @@ public class MainWindow : Gtk.Window
         var box = new VBox();
         Add(box);
 
-        var searchEntry = new SearchEntry();
+        searchEntry = new SearchEntry();
+        searchEntry.Changed += OnSearch;
         box.PackStart(searchEntry, expand:false, fill:true, padding:0);
 
-        var clipboardItemListView = new ClipboardItemListView();
+        clipboardItemListView = new ClipboardItemListView();
         box.PackStart(clipboardItemListView, expand:true, fill:true, padding:0);
 
         SetSizeRequest(250, 350);
@@ -50,5 +54,10 @@ public class MainWindow : Gtk.Window
     {
         Application.Quit();
         a.RetVal = true;
+    }
+
+    private void OnSearch(object sender, EventArgs a)
+    {
+        clipboardItemListView.Filter = searchEntry.Text;
     }
 }

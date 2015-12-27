@@ -23,6 +23,33 @@ using Gtk;
 
 public class ClipboardItemStore : Gtk.ListStore
 {
+    private static TreeIter GetIter(ITreeModel model, TreePath path)
+    {
+        TreeIter iter;
+        model.GetIter(out iter, path);
+        return iter;
+    }
+
+    private static TreeIter GetIter(ITreeModel model, int row)
+    {
+        TreeIter rootIter;
+        model.GetIterFirst(out rootIter);
+
+        var path = new TreePath(new int[]{row});
+        return GetIter(model, path);
+    }
+
+    public static string GetText(ITreeModel model, TreeIter iter)
+    {
+        return model.GetValue(iter, column:0) as string;
+    }
+
+    public static string GetText(ITreeModel model, TreePath path)
+    {
+        var iter = GetIter(model, path);
+        return GetText(model, iter);
+    }
+
     public ClipboardItemStore() : base(typeof(string), typeof(DateTime))
     {
     }
@@ -41,24 +68,14 @@ public class ClipboardItemStore : Gtk.ListStore
         Array.Sort(rows, (lhs, rhs) => rhs.CompareTo(lhs));
 
         foreach (int row in rows) {
-            var iter = GetIter(row);
+            var iter = GetIter(this, row);
             Remove(ref iter);
         }
     }
 
-    public string GetText(TreeIter iter)
-    {
-        return GetValue(iter, column:0) as string;
-    }
-
     public string GetText(int row)
     {
-        return GetText(GetIter(row));
-    }
-
-    public string GetText(TreePath path)
-    {
-        return GetText(GetIter(path));
+        return GetText(this, GetIter(row));
     }
 
     public int Count
@@ -66,20 +83,9 @@ public class ClipboardItemStore : Gtk.ListStore
         get { return IterNChildren(); }
     }
 
-    public TreeIter GetIter(TreePath path)
-    {
-        TreeIter iter;
-        GetIter(out iter, path);
-        return iter;
-    }
-
     public TreeIter GetIter(int row)
     {
-        TreeIter rootIter;
-        GetIterFirst(out rootIter);
-
-        var path = new TreePath(new int[]{row});
-        return GetIter(path);
+        return GetIter(this, row);
     }
 }
 

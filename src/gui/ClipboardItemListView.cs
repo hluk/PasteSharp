@@ -18,12 +18,15 @@
 */
 
 using System;
+using System.Text.RegularExpressions;
 
 using Gtk;
 
 public class ClipboardItemListView : Gtk.TreeView
 {
     ClipboardItemStore store;
+    TreeModelSort modelSort;
+    TreeModelFilter modelFilter;
 
     private static void SetColumnSortable(TreeViewColumn column, int columnId)
     {
@@ -64,11 +67,28 @@ public class ClipboardItemListView : Gtk.TreeView
         SetColumnSortable(dateTimeColumn, ++columnId);
 
         store = new ClipboardItemStore();
-        var sortableStore = new TreeModelSort(store);
-        sortableStore.SetSortFunc(1, CompareDateTime);
-        Model = sortableStore;
+
+        modelFilter = new TreeModelFilter(store, null);
+        modelFilter.VisibleFunc = FilterFunc;
+
+        modelSort = new TreeModelSort(modelFilter);
+        modelSort.SetSortFunc(1, CompareDateTime);
+
+        Model = modelSort;
 
         ClipboardNotifier.registerCallback(store.AddText);
+    }
+
+    private Regex filter;
+    public string Filter {
+        set {
+            try {
+                filter = new Regex(value, RegexOptions.IgnoreCase);
+            } catch (ArgumentException) {
+                filter = null;
+            }
+            modelFilter.Refilter();
+        }
     }
 
     protected override bool OnKeyPressEvent(Gdk.EventKey ev)
@@ -90,7 +110,7 @@ public class ClipboardItemListView : Gtk.TreeView
 
     protected override void OnRowActivated(TreePath path, TreeViewColumn column)
     {
-        var text = store.GetText(path);
+        var text = ClipboardItemStore.GetText(Model, path);
         SetClipboardText(text);
     }
 
@@ -100,7 +120,7 @@ public class ClipboardItemListView : Gtk.TreeView
 
         Selection.SelectedForeach(
                 (model, path, iter) => {
-                    text += store.GetText(path) + "\n";
+                    text += ClipboardItemStore.GetText(Model, path) + "\n";
                 });
 
         SetClipboardText(text.Substring(0, text.Length - 1));
@@ -109,6 +129,12 @@ public class ClipboardItemListView : Gtk.TreeView
     private void deleteSelection()
     {
         var paths = Selection.GetSelectedRows();
+
+        for (int i = 0; i < paths.Length; ++i) {
+            var path1 = modelSort.ConvertPathToChildPath(paths[i]);
+            paths[i] = modelFilter.ConvertPathToChildPath(path1);
+        }
+
         store.RemoveItems(paths);
     }
 
@@ -122,5 +148,14 @@ public class ClipboardItemListView : Gtk.TreeView
     {
         ClipboardNotifier.GetClipboard().Text = text;
         Iconify();
+    }
+
+    private bool FilterFunc(ITreeModel model, TreeIter iter)
+    {
+        if (filter == null)
+            return true;
+
+        var text = ClipboardItemStore.GetText(model, iter);
+        return filter.IsMatch(text);
     }
 }
