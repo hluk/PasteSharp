@@ -22,11 +22,27 @@ using System.Text.RegularExpressions;
 
 using Gtk;
 
+public class ItemsActivatedEventArgs : EventArgs
+{
+    public string ItemText {
+        get;
+        private set;
+    }
+
+    public ItemsActivatedEventArgs(string itemText)
+    {
+        ItemText = itemText;
+    }
+}
+
 public class ClipboardItemListView : Gtk.TreeView
 {
     ClipboardItemStore store;
     TreeModelSort modelSort;
     TreeModelFilter modelFilter;
+
+    public delegate void ItemsActivatedEventHandler(object sender, ItemsActivatedEventArgs a);
+    public event ItemsActivatedEventHandler ItemsActivatedEvent;
 
     private static void SetColumnSortable(TreeViewColumn column, int columnId)
     {
@@ -75,8 +91,11 @@ public class ClipboardItemListView : Gtk.TreeView
         modelSort.SetSortFunc(1, CompareDateTime);
 
         Model = modelSort;
+    }
 
-        ClipboardNotifier.registerCallback(store.AddText);
+    public void AddText(string text)
+    {
+        store.AddText(text);
     }
 
     private Regex filter;
@@ -111,7 +130,7 @@ public class ClipboardItemListView : Gtk.TreeView
     protected override void OnRowActivated(TreePath path, TreeViewColumn column)
     {
         var text = ClipboardItemStore.GetText(Model, path);
-        SetClipboardText(text);
+        RaiseItemsActivatedEvent(text);
     }
 
     private void activateSelection()
@@ -123,7 +142,10 @@ public class ClipboardItemListView : Gtk.TreeView
                     text += ClipboardItemStore.GetText(Model, path) + "\n";
                 });
 
-        SetClipboardText(text.Substring(0, text.Length - 1));
+        if (!string.IsNullOrEmpty(text))
+            text = text.Substring(0, text.Length - 1);
+
+        RaiseItemsActivatedEvent(text);
     }
 
     private void deleteSelection()
@@ -138,18 +160,6 @@ public class ClipboardItemListView : Gtk.TreeView
         store.RemoveItems(paths);
     }
 
-    private void Iconify()
-    {
-        if (Window != null)
-            Window.Iconify();
-    }
-
-    private void SetClipboardText(string text)
-    {
-        ClipboardNotifier.GetClipboard().Text = text;
-        Iconify();
-    }
-
     private bool FilterFunc(ITreeModel model, TreeIter iter)
     {
         if (filter == null)
@@ -157,5 +167,12 @@ public class ClipboardItemListView : Gtk.TreeView
 
         var text = ClipboardItemStore.GetText(model, iter);
         return filter.IsMatch(text);
+    }
+
+    private void RaiseItemsActivatedEvent(string itemText)
+    {
+        var handler = ItemsActivatedEvent;
+        if (handler != null)
+            handler(this, new ItemsActivatedEventArgs(itemText));
     }
 }

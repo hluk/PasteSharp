@@ -28,7 +28,7 @@ public class MainWindow : Gtk.Window
     SearchEntry searchEntry;
     ClipboardItemListView clipboardItemListView;
 
-    static private string GetWindowTitle()
+    private static string GetWindowTitle()
     {
         return Assembly.GetExecutingAssembly().GetName().Name;
     }
@@ -38,6 +38,12 @@ public class MainWindow : Gtk.Window
     {
         return WindowGeometryConfiguration.GeometryConfigurationSection(
                 config, "MainWindowGeometry");
+    }
+
+    private static Clipboard GetClipboard()
+    {
+        var atom = Gdk.Atom.Intern("CLIPBOARD", false);
+        return Clipboard.Get(atom);
     }
 
     public MainWindow() : base(GetWindowTitle())
@@ -50,12 +56,14 @@ public class MainWindow : Gtk.Window
         box.PackStart(searchEntry, expand:false, fill:true, padding:0);
 
         clipboardItemListView = new ClipboardItemListView();
+        clipboardItemListView.ItemsActivatedEvent += OnItemsActivated;
         box.PackStart(clipboardItemListView, expand:true, fill:true, padding:0);
 
         LoadGeometry();
         ShowAll();
 
         DeleteEvent += OnDeleteEvent;
+        GetClipboard().OwnerChange += OnClipboardChanged;
     }
 
     private void SaveGeometry()
@@ -101,5 +109,22 @@ public class MainWindow : Gtk.Window
     private void OnSearch(object sender, EventArgs a)
     {
         clipboardItemListView.Filter = searchEntry.Text;
+    }
+
+    private void OnItemsActivated(object sender, ItemsActivatedEventArgs a)
+    {
+        GetClipboard().Text = a.ItemText;
+        Iconify();
+    }
+
+    private void OnClipboardChanged(object sender, OwnerChangeArgs a)
+    {
+        GetClipboard().RequestText(
+                (clipboard, text) => OnClipboardTextChanged(text));
+    }
+
+    private void OnClipboardTextChanged(string text)
+    {
+        clipboardItemListView.AddText(text);
     }
 }
