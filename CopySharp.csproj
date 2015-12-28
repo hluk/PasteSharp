@@ -63,6 +63,7 @@
         <Compile Include="src\config\WindowGeometryConfiguration.cs" />
         <Compile Include="src\data\ClipboardItemStore.cs" />
         <Compile Include="src\gui\ClipboardItemListView.cs" />
+        <Compile Include="src\gui\ClipboardManager.cs" />
         <Compile Include="src\gui\MainWindow.cs" />
         <Compile Include="src\gui\SearchEntry.cs" />
         <Compile Include="src\Main.cs" />
