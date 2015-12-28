@@ -92,7 +92,7 @@ public class MainWindow : Gtk.Window
     {
         var config = WindowGeometryConfiguration.GeometryConfiguration();
         var configSection = GeometryConfigurationSection(config);
-        SetSizeRequest(configSection.Width, configSection.Height);
+        Resize(configSection.Width, configSection.Height);
         Move(configSection.X, configSection.Y);
     }
 
