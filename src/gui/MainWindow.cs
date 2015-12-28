@@ -19,6 +19,7 @@
 
 using System;
 using System.Reflection;
+using System.Configuration;
 
 using Gtk;
 
@@ -30,6 +31,13 @@ public class MainWindow : Gtk.Window
     static private string GetWindowTitle()
     {
         return Assembly.GetExecutingAssembly().GetName().Name;
+    }
+
+    private static WindowGeometryConfiguration GeometryConfigurationSection(
+            Configuration config)
+    {
+        return WindowGeometryConfiguration.GeometryConfigurationSection(
+                config, "MainWindowGeometry");
     }
 
     public MainWindow() : base(GetWindowTitle())
@@ -44,14 +52,48 @@ public class MainWindow : Gtk.Window
         clipboardItemListView = new ClipboardItemListView();
         box.PackStart(clipboardItemListView, expand:true, fill:true, padding:0);
 
-        SetSizeRequest(250, 350);
+        LoadGeometry();
         ShowAll();
 
         DeleteEvent += OnDeleteEvent;
     }
 
+    private void SaveGeometry()
+    {
+        var config = WindowGeometryConfiguration.GeometryConfiguration();
+        var configSection = GeometryConfigurationSection(config);
+
+        int width;
+        int height;
+        GetSize(out width, out height);
+        configSection.Width = width;
+        configSection.Height = height;
+
+        int x;
+        int y;
+        GetPosition(out x, out y);
+        configSection.X = x;
+        configSection.Y = y;
+
+        try {
+            config.Save();
+        } catch (ConfigurationErrorsException e) {
+            Console.WriteLine("Error saving window geometry to \""
+                    + config.FilePath + "\": " + e.Message);
+        }
+    }
+
+    private void LoadGeometry()
+    {
+        var config = WindowGeometryConfiguration.GeometryConfiguration();
+        var configSection = GeometryConfigurationSection(config);
+        SetSizeRequest(configSection.Width, configSection.Height);
+        Move(configSection.X, configSection.Y);
+    }
+
     private void OnDeleteEvent(object sender, DeleteEventArgs a)
     {
+        SaveGeometry();
         Application.Quit();
         a.RetVal = true;
     }
