@@ -2,10 +2,21 @@ language: csharp
 
 solution: CopySharp.sln
 
+os:
+  - linux
+  - osx
+
+sudo: true
+
+before_install:
+  - utils/travis-before-install-${TRAVIS_OS_NAME}.sh
+
 install:
-  - sudo apt-get install libgtk-3-dev
-  - make nuget
+  - utils/travis-install-${TRAVIS_OS_NAME}.sh
 
 script:
-  - make tests
+  - utils/travis-script-${TRAVIS_OS_NAME}.sh
+
+after_success:
+  - utils/travis-after-success-${TRAVIS_OS_NAME}.sh
 
