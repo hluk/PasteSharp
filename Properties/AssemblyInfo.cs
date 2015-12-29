@@ -7,7 +7,7 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyTitle ("PasteSharp")]
 [assembly: AssemblyDescription ("")]
 [assembly: AssemblyConfiguration ("")]
-[assembly: AssemblyCompany ("PasteSharp")]
+[assembly: AssemblyCompany ("Lukas Holecek")]
 [assembly: AssemblyProduct ("PasteSharp")]
 [assembly: AssemblyCopyright ("Lukas Holecek")]
 [assembly: AssemblyTrademark ("")]
