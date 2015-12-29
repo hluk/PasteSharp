@@ -5,6 +5,8 @@ PasteSharp is small clipboard manager.
 
 **This project is currently very early development stage.**
 
+NuGet package is [here](https://www.nuget.org/packages/PasteSharp).
+
 Application is written in C# with GUI toolkit Gtk#3 for GUI.
 
 Application is licensed under GPLv3.
