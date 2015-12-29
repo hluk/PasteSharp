@@ -18,18 +18,68 @@
 */
 
 using System;
+using System.Reflection;
+
 using Gtk;
 
 namespace CopySharp
 {
     class MainClass
     {
-        public static void Main(string[] args)
+        private static void PrintHelp()
+        {
+            var exe = System.AppDomain.CurrentDomain.FriendlyName;
+            Console.WriteLine("CopySharp is Small cross-platform clipboard manager");
+            Console.WriteLine("Usage: " + exe + " [ARGUMENTS]");
+            Console.WriteLine("ARGUMENTS:");
+            Console.WriteLine("  -h, --help     Print help.");
+            Console.WriteLine("  -v, --version  Print version.");
+        }
+
+        private static void PrintVersion()
+        {
+            var name = Assembly.GetExecutingAssembly().GetName();
+            Console.WriteLine(name.Name + " " + name.Version);
+        }
+
+        private static int ParseArguments(string[] args)
+        {
+            if (args.Length == 1) {
+                switch (args[0]) {
+                    case "-h":
+                    case "--help":
+                        PrintHelp();
+                        return 0;
+
+                    case "-v":
+                    case "--version":
+                        PrintVersion();
+                        return 0;
+
+                    default:
+                        break;
+                }
+            }
+
+            Console.WriteLine("Error: Unknown command line argument (use --help).");
+            return 1;
+        }
+
+        private static void RunApp()
         {
             Application.Init();
             MainWindow win = new MainWindow();
             win.Show();
             Application.Run();
+        }
+
+        public static int Main(string[] args)
+        {
+            if (args.Length > 0)
+                return ParseArguments(args);
+
+            RunApp();
+            return 0;
         }
     }
 }
