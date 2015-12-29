@@ -23,22 +23,9 @@ NUNIT_CONSOLE_EXE ?= $(PKG_DIR)NUnit.Runners.2.6.4/tools/nunit-console.exe
 NUNIT_CONSOLE ?= MONO_IOMAP=all $(MONO) $(NUNIT_CONSOLE_EXE)
 BIN_PATH ?= ./bin/$(CONF)
 
-# Fix some dll references on Linux.
-UNAME ?= $(shell uname -s)
-ifeq ($(UNAME),Linux)
-DLLS := \
-	$(BIN_PATH)/libgobject-2.0-0.dll \
-	$(BIN_PATH)/libglib-2.0-0.dll \
-	$(BIN_PATH)/libgio-2.0-0.dll \
-	$(BIN_PATH)/libgtk-3-0.dll \
-	$(BIN_PATH)/libgdk-3-0.dll
-endif
+.PHONY: all clean distclean run tests nuget vim monodevelop
 
-.PHONY: all build clean distclean dlls run tests nuget vim monodevelop
-
-all: build dlls
-
-build:
+all:
 	xbuild /verbosity:quiet /p:Configuration=$(CONF) $(PROJ).csproj
 
 clean:
@@ -46,11 +33,6 @@ clean:
 
 distclean: clean
 	rm -rf packages
-
-dlls: $(DLLS)
-
-%.dll:
-	ln -sf /usr/lib/$(patsubst %-0.dll,%.so,$(notdir $@)) $@
 
 run: all
 	$(MONO) ./$(BIN_PATH)/$(PROJ).exe
