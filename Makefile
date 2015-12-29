@@ -12,7 +12,7 @@
 #
 # Example:
 #   make CONF=Release nuget tests
-PROJ ?= CopySharp
+PROJ ?= PasteSharp
 CONF ?= Debug
 
 PROJ_DIR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))

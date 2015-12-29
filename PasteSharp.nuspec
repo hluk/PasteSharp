@@ -7,7 +7,7 @@
         <authors>$author$</authors>
         <owners>$author$</owners>
         <licenseUrl>http://www.gnu.org/licenses/gpl-3.0.html</licenseUrl>
-        <projectUrl>https://github.com/hluk/CopySharp</projectUrl>
+        <projectUrl>https://github.com/hluk/PasteSharp</projectUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>Small clipboard manager</description>
         <releaseNotes></releaseNotes>

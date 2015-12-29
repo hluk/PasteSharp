@@ -4,11 +4,11 @@ using System.Runtime.CompilerServices;
 // Information about this assembly is defined by the following attributes.
 // Change them to the values specific to your project.
 
-[assembly: AssemblyTitle ("CopySharp")]
+[assembly: AssemblyTitle ("PasteSharp")]
 [assembly: AssemblyDescription ("")]
 [assembly: AssemblyConfiguration ("")]
-[assembly: AssemblyCompany ("CopySharp")]
-[assembly: AssemblyProduct ("CopySharp")]
+[assembly: AssemblyCompany ("PasteSharp")]
+[assembly: AssemblyProduct ("PasteSharp")]
 [assembly: AssemblyCopyright ("Lukas Holecek")]
 [assembly: AssemblyTrademark ("")]
 [assembly: AssemblyCulture ("")]

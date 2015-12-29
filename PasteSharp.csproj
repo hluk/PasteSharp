@@ -5,8 +5,8 @@
         <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
         <ProjectGuid>{12F4D2E6-DFBF-4148-A5B7-006136C37B32}</ProjectGuid>
         <OutputType>WinExe</OutputType>
-        <RootNamespace>CopySharp</RootNamespace>
-        <AssemblyName>CopySharp</AssemblyName>
+        <RootNamespace>PasteSharp</RootNamespace>
+        <AssemblyName>PasteSharp</AssemblyName>
         <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     </PropertyGroup>
 

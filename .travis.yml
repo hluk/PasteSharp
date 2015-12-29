@@ -1,6 +1,6 @@
 language: csharp
 
-solution: CopySharp.sln
+solution: PasteSharp.sln
 
 os:
   - linux

@@ -1,6 +1,6 @@
-[![Build Status](https://travis-ci.org/hluk/CopyQ.svg?branch=master)](https://travis-ci.org/hluk/CopySharp)
+[![Build Status](https://travis-ci.org/hluk/PasteSharp.svg?branch=master)](https://travis-ci.org/hluk/PasteSharp)
 
-CopySharp is small clipboard manager.
+PasteSharp is small clipboard manager.
 
 **This project is currently very early development stage.**
 

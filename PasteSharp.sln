@@ -1,7 +1,7 @@
 
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CopySharp", "CopySharp.csproj", "{12F4D2E6-DFBF-4148-A5B7-006136C37B32}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PasteSharp", "PasteSharp.csproj", "{12F4D2E6-DFBF-4148-A5B7-006136C37B32}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
