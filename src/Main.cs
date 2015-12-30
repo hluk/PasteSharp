@@ -65,11 +65,29 @@ namespace PasteSharp
             return 1;
         }
 
+        private static void CreateMainWindow(ClipboardManager clipboardManager)
+        {
+            var win = new MainWindow();
+            win.Show();
+
+            // Add new clipboard content to list.
+            clipboardManager.ClipboardTextChangedEvent +=
+                (o, a) => win.AddTextItem(a.Text);
+
+            // Push activated item to clipboard.
+            win.ItemsActivatedEvent +=
+                (o, a) => clipboardManager.Text = a.ItemText;
+
+            // Minimize main window after an item is activated.
+            win.ItemsActivatedEvent +=
+                (o, a) => win.Iconify();
+        }
+
         private static void RunApp()
         {
             Application.Init();
-            MainWindow win = new MainWindow();
-            win.Show();
+            var clipboardManager = new ClipboardManager();
+            CreateMainWindow(clipboardManager);
             Application.Run();
         }
 

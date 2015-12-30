@@ -27,7 +27,8 @@ public class MainWindow : Gtk.Window
 {
     SearchEntry searchEntry;
     ClipboardItemListView clipboardItemListView;
-    ClipboardManager clipboardManager;
+
+    public event ItemsActivatedEventHandler ItemsActivatedEvent;
 
     private static string GetWindowTitle()
     {
@@ -54,14 +55,16 @@ public class MainWindow : Gtk.Window
         clipboardItemListView.ItemsActivatedEvent += OnItemsActivated;
         box.PackStart(clipboardItemListView, expand:true, fill:true, padding:0);
 
-        clipboardManager = new ClipboardManager();
-        clipboardManager.ClipboardTextChangedEvent += OnClipboardTextChanged;
-
         LoadGeometry();
         LoadSettings();
         ShowAll();
 
         DeleteEvent += OnDeleteEvent;
+    }
+
+    public void AddTextItem(string text)
+    {
+        clipboardItemListView.AddText(text);
     }
 
     private void LoadSettings()
@@ -118,13 +121,8 @@ public class MainWindow : Gtk.Window
 
     private void OnItemsActivated(object sender, ItemsActivatedEventArgs a)
     {
-        clipboardManager.Text = a.ItemText;
-        Iconify();
-    }
-
-    private void OnClipboardTextChanged(object sender, ClipboardTextChangedEventArgs a)
-    {
-        if (!string.IsNullOrEmpty(a.Text))
-        clipboardItemListView.AddText(a.Text);
+        var handler = ItemsActivatedEvent;
+        if (handler != null)
+            handler(this, a);
     }
 }

@@ -35,13 +35,15 @@ public class ItemsActivatedEventArgs : EventArgs
     }
 }
 
+public delegate void ItemsActivatedEventHandler(
+        object sender, ItemsActivatedEventArgs a);
+
 public class ClipboardItemListView : Gtk.TreeView
 {
     ClipboardItemStore store;
     TreeModelSort modelSort;
     TreeModelFilter modelFilter;
 
-    public delegate void ItemsActivatedEventHandler(object sender, ItemsActivatedEventArgs a);
     public event ItemsActivatedEventHandler ItemsActivatedEvent;
 
     private static void SetColumnSortable(TreeViewColumn column, int columnId)
