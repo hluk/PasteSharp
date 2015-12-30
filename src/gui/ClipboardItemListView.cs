@@ -93,6 +93,11 @@ public class ClipboardItemListView : Gtk.TreeView
         Model = modelSort;
     }
 
+    public uint MaxItems {
+        get { return store.MaxItems; }
+        set { store.MaxItems = value; }
+    }
+
     public void AddText(string text)
     {
         store.AddText(text);

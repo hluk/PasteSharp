@@ -30,12 +30,12 @@ public class ClipboardItemStore : Gtk.ListStore
         return iter;
     }
 
-    private static TreeIter GetIter(ITreeModel model, int row)
+    private static TreeIter GetIter(ITreeModel model, uint row)
     {
         TreeIter rootIter;
         model.GetIterFirst(out rootIter);
 
-        var path = new TreePath(new int[]{row});
+        var path = new TreePath(new int[]{(int)row});
         return GetIter(model, path);
     }
 
@@ -54,38 +54,59 @@ public class ClipboardItemStore : Gtk.ListStore
     {
     }
 
+    private uint maxItems = 100;
+    public uint MaxItems {
+        get { return maxItems; }
+        set { maxItems = value; LimitNumberOfItems(maxItems); }
+    }
+
     public void AddText(string text)
     {
+        if (maxItems == 0)
+            return;
+
+        LimitNumberOfItems(maxItems - 1);
         InsertWithValues(0, text, DateTime.Now);
     }
 
     public void RemoveItems(TreePath[] paths)
     {
         // Remove rows from bottom to top so as not to invalidate paths.
-        int[] rows = new int[paths.Length];
-        for (int i = 0; i < paths.Length; ++i)
-            rows[i] = paths[i].Indices[0];
+        uint[] rows = new uint[paths.Length];
+        for (uint i = 0; i < paths.Length; ++i)
+            rows[i] = (uint)paths[i].Indices[0];
         Array.Sort(rows, (lhs, rhs) => rhs.CompareTo(lhs));
 
-        foreach (int row in rows) {
+        foreach (uint row in rows) {
             var iter = GetIter(this, row);
             Remove(ref iter);
         }
     }
 
-    public string GetText(int row)
+    public string GetText(uint row)
     {
         return GetText(this, GetIter(row));
     }
 
-    public int Count
-    {
-        get { return IterNChildren(); }
+    public uint RowCount {
+        get { return (uint)IterNChildren(); }
     }
 
-    public TreeIter GetIter(int row)
+    public TreeIter GetIter(uint row)
     {
         return GetIter(this, row);
+    }
+
+    private void LimitNumberOfItems(uint max)
+    {
+        if (RowCount > max) {
+            var iter = GetIter(max);
+            uint count = RowCount - max;
+            for (uint i = 0; i < count; ++i) {
+                if (!Remove(ref iter))
+                    break;
+            }
+        }
     }
 }
 

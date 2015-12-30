@@ -51,11 +51,11 @@ public class ClipboardItemStoreTest : Assert {
     public void AppendItems()
     {
         store.AddText("1");
-        Assert.AreEqual(1, store.Count);
+        Assert.AreEqual(1, store.RowCount);
         Assert.AreEqual("1", store.GetText(0));
 
         store.AddText("2");
-        Assert.AreEqual(2, store.Count);
+        Assert.AreEqual(2, store.RowCount);
         Assert.AreEqual("2", store.GetText(0));
     }
 
@@ -65,7 +65,7 @@ public class ClipboardItemStoreTest : Assert {
         store.AddText("1");
         var paths = TreePaths(new int[]{0});
         store.RemoveItems(paths);
-        Assert.AreEqual(0, store.Count);
+        Assert.AreEqual(0, store.RowCount);
     }
 
     // FIXME: Parametrized test doen't seem to work.
@@ -78,7 +78,7 @@ public class ClipboardItemStoreTest : Assert {
 
         var paths = TreePaths(rows);
         store.RemoveItems(paths);
-        Assert.AreEqual(2, store.Count);
+        Assert.AreEqual(2, store.RowCount);
         Assert.AreEqual("4", store.GetText(0));
         Assert.AreEqual("1", store.GetText(1));
     }
@@ -93,5 +93,53 @@ public class ClipboardItemStoreTest : Assert {
     public void RemoveItemsReversed()
     {
         RemoveItems(new int[]{2,1});
+    }
+
+    [Test]
+    public void LimitItems()
+    {
+        store.MaxItems = 2;
+
+        store.AddText("1");
+        store.AddText("2");
+        Assert.AreEqual(2, store.RowCount);
+        Assert.AreEqual("2", store.GetText(0));
+        Assert.AreEqual("1", store.GetText(1));
+
+        store.AddText("3");
+        Assert.AreEqual(2, store.RowCount);
+        Assert.AreEqual("3", store.GetText(0));
+        Assert.AreEqual("2", store.GetText(1));
+    }
+
+    [Test]
+    public void LimitItemsToZero()
+    {
+        store.MaxItems = 0;
+        store.AddText("1");
+        Assert.AreEqual(0, store.RowCount);
+    }
+
+    [Test]
+    public void LimitItemsCrop()
+    {
+        store.MaxItems = 3;
+
+        store.AddText("1");
+        store.AddText("2");
+        store.AddText("3");
+        Assert.AreEqual(3, store.RowCount);
+
+        store.MaxItems = 2;
+        Assert.AreEqual(2, store.RowCount);
+        Assert.AreEqual("3", store.GetText(0));
+        Assert.AreEqual("2", store.GetText(1));
+
+        store.MaxItems = 1;
+        Assert.AreEqual(1, store.RowCount);
+        Assert.AreEqual("3", store.GetText(0));
+
+        store.MaxItems = 0;
+        Assert.AreEqual(0, store.RowCount);
     }
 }
