@@ -142,4 +142,20 @@ public class ClipboardItemStoreTest : Assert {
         store.MaxItems = 0;
         Assert.AreEqual(0, store.RowCount);
     }
+
+    [Test]
+    public void AutoRemoveDuplicateItems()
+    {
+        store.AddText("1");
+        store.AddText("1");
+        Assert.AreEqual(1, store.RowCount);
+
+        store.AddText("2");
+        Assert.AreEqual(2, store.RowCount);
+
+        store.AddText("1");
+        Assert.AreEqual(2, store.RowCount);
+        Assert.AreEqual("1", store.GetText(0));
+        Assert.AreEqual("2", store.GetText(1));
+    }
 }

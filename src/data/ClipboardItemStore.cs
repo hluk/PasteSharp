@@ -39,6 +39,13 @@ public class ClipboardItemStore : Gtk.ListStore
         return GetIter(model, path);
     }
 
+    private static TreeIter FindIter(ITreeModel model, string text)
+    {
+        var iter = GetIter(model, 0);
+        while (GetText(model, iter) != text && model.IterNext(ref iter)) {}
+        return iter;
+    }
+
     public static string GetText(ITreeModel model, TreeIter iter)
     {
         return model.GetValue(iter, column:0) as string;
@@ -65,8 +72,20 @@ public class ClipboardItemStore : Gtk.ListStore
         if (maxItems == 0)
             return;
 
+        RemoveText(text);
+
         LimitNumberOfItems(maxItems - 1);
         InsertWithValues(0, text, DateTime.Now);
+    }
+
+    public void RemoveText(string text)
+    {
+        if (RowCount == 0)
+            return;
+
+        var iter = FindIter(this, text);
+        if (IterIsValid(iter))
+            Remove(ref iter);
     }
 
     public void RemoveItems(TreePath[] paths)
