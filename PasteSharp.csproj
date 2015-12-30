@@ -60,6 +60,8 @@
 
     <ItemGroup>
         <Compile Include="Properties\AssemblyInfo.cs" />
+        <Compile Include="src\config\ConfigurationTools.cs" />
+        <Compile Include="src\config\ItemListConfiguration.cs" />
         <Compile Include="src\config\WindowGeometryConfiguration.cs" />
         <Compile Include="src\data\ClipboardItemStore.cs" />
         <Compile Include="src\gui\ClipboardItemListView.cs" />

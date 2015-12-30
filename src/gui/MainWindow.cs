@@ -58,9 +58,17 @@ public class MainWindow : Gtk.Window
         clipboardManager.ClipboardTextChangedEvent += OnClipboardTextChanged;
 
         LoadGeometry();
+        LoadSettings();
         ShowAll();
 
         DeleteEvent += OnDeleteEvent;
+    }
+
+    private void LoadSettings()
+    {
+        var config = ConfigurationTools.GetConfiguration();
+        var configSection = ItemListConfiguration.GetConfigurationSection(config);
+        clipboardItemListView.MaxItems = configSection.MaxItems;
     }
 
     private void SaveGeometry()

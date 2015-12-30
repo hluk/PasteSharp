@@ -24,29 +24,14 @@ public sealed class WindowGeometryConfiguration : ConfigurationSection
 {
     public static Configuration GeometryConfiguration()
     {
-        return ConfigurationManager.OpenExeConfiguration(
-                ConfigurationUserLevel.PerUserRoamingAndLocal);
+        return ConfigurationTools.GetConfiguration();
     }
 
     public static WindowGeometryConfiguration GeometryConfigurationSection(
            Configuration config, string sectionName)
     {
-        try {
-            var configSection =
-                config.GetSection("MainWindowGeometry") as WindowGeometryConfiguration;
-
-            if (configSection == null) {
-                configSection = new WindowGeometryConfiguration();
-                config.Sections.Add("MainWindowGeometry", configSection);
-            }
-
-            return configSection;
-        } catch (ConfigurationErrorsException e) {
-            Console.WriteLine(
-                    "Error loading window geometry from \""
-                    + config.FilePath + "\": " + e.Message);
-            return new WindowGeometryConfiguration();
-        }
+        return ConfigurationTools.GetConfigurationSection<WindowGeometryConfiguration>(
+                config, sectionName);
     }
 
     [ConfigurationProperty("x", DefaultValue = 0)]
