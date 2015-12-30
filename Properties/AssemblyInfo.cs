@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 // Change them to the values specific to your project.
 
 [assembly: AssemblyTitle ("PasteSharp")]
-[assembly: AssemblyDescription ("")]
+[assembly: AssemblyDescription ("Simple clipboard manager")]
 [assembly: AssemblyConfiguration ("")]
 [assembly: AssemblyCompany ("Lukas Holecek")]
 [assembly: AssemblyProduct ("PasteSharp")]
