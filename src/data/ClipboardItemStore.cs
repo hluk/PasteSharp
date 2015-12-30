@@ -72,6 +72,9 @@ public class ClipboardItemStore : Gtk.ListStore
         if (maxItems == 0)
             return;
 
+        if (string.IsNullOrWhiteSpace(text))
+            return;
+
         RemoveText(text);
 
         LimitNumberOfItems(maxItems - 1);

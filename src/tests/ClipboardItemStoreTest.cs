@@ -158,4 +158,27 @@ public class ClipboardItemStoreTest : Assert {
         Assert.AreEqual("1", store.GetText(0));
         Assert.AreEqual("2", store.GetText(1));
     }
+
+    [Test]
+    public void IgnoreEmptyItem()
+    {
+        store.AddText("");
+        Assert.AreEqual(0, store.RowCount);
+    }
+
+    [Test]
+    public void IgnoreNullItem()
+    {
+        store.AddText(null);
+        Assert.AreEqual(0, store.RowCount);
+    }
+
+    [Test]
+    public void IgnoreWhiteSpaceItem()
+    {
+        store.AddText("     ");
+        store.AddText("   \n");
+        store.AddText("\t \n");
+        Assert.AreEqual(0, store.RowCount);
+    }
 }
