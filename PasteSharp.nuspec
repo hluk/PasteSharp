@@ -9,7 +9,7 @@
         <licenseUrl>http://www.gnu.org/licenses/gpl-3.0.html</licenseUrl>
         <projectUrl>https://github.com/hluk/PasteSharp</projectUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
-        <description>Small clipboard manager</description>
+        <description>Simple cross-platform clipboard manager</description>
         <releaseNotes></releaseNotes>
         <copyright>Copyright 2015</copyright>
         <tags>clipboard</tags>

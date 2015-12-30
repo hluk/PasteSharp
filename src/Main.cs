@@ -29,7 +29,7 @@ namespace PasteSharp
         private static void PrintHelp()
         {
             var exe = System.AppDomain.CurrentDomain.FriendlyName;
-            Console.WriteLine("PasteSharp is Small cross-platform clipboard manager");
+            Console.WriteLine("PasteSharp is simple cross-platform clipboard manager");
             Console.WriteLine("Usage: " + exe + " [ARGUMENTS]");
             Console.WriteLine("ARGUMENTS:");
             Console.WriteLine("  -h, --help     Print help.");

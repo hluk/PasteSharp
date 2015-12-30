@@ -1,7 +1,7 @@
 [![Build Status](https://travis-ci.org/hluk/PasteSharp.svg?branch=master)](https://travis-ci.org/hluk/PasteSharp)
 [![Windows Build Status](https://ci.appveyor.com/api/projects/status/github/hluk/pastesharp?branch=master&svg=true)](https://ci.appveyor.com/project/hluk/pastesharp)
 
-PasteSharp is simple clipboard manager.
+PasteSharp is simple cross-platform clipboard manager.
 
 NuGet package is [here](https://www.nuget.org/packages/PasteSharp).
 
