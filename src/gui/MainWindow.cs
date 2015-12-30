@@ -67,11 +67,21 @@ public class MainWindow : Gtk.Window
         clipboardItemListView.AddText(text);
     }
 
+    private void SaveSettings()
+    {
+        var config = ConfigurationTools.GetConfiguration();
+        var configSection = ItemListConfiguration.GetConfigurationSection(config);
+        configSection.MaxItems = clipboardItemListView.MaxItems;
+        configSection.TextColumnWidth = clipboardItemListView.TextColumnWidth;
+        config.Save();
+    }
+
     private void LoadSettings()
     {
         var config = ConfigurationTools.GetConfiguration();
         var configSection = ItemListConfiguration.GetConfigurationSection(config);
         clipboardItemListView.MaxItems = configSection.MaxItems;
+        clipboardItemListView.TextColumnWidth = configSection.TextColumnWidth;
     }
 
     private void SaveGeometry()
@@ -110,6 +120,7 @@ public class MainWindow : Gtk.Window
     private void OnDeleteEvent(object sender, DeleteEventArgs a)
     {
         SaveGeometry();
+        SaveSettings();
         Application.Quit();
         a.RetVal = true;
     }

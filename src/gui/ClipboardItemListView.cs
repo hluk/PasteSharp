@@ -46,8 +46,12 @@ public class ClipboardItemListView : Gtk.TreeView
 
     public event ItemsActivatedEventHandler ItemsActivatedEvent;
 
-    private static void SetColumnSortable(TreeViewColumn column, int columnId)
+    private static void InitColumn(TreeViewColumn column, int columnId)
     {
+        column.Resizable = true;
+        column.FixedWidth = 0;
+        column.Sizing = TreeViewColumnSizing.Fixed;
+
         column.SortIndicator = true;
         column.SortColumnId = columnId;
         column.Clickable = true;
@@ -79,10 +83,10 @@ public class ClipboardItemListView : Gtk.TreeView
         var renderer = new CellRendererText();
 
         var textColumn = AppendColumn("Items", renderer, "text", 0);
-        SetColumnSortable(textColumn, ++columnId);
+        InitColumn(textColumn, ++columnId);
 
         var dateTimeColumn = AppendColumn("Created", renderer, SetDateTimeRendererText);
-        SetColumnSortable(dateTimeColumn, ++columnId);
+        InitColumn(dateTimeColumn, ++columnId);
 
         store = new ClipboardItemStore();
 
@@ -103,6 +107,11 @@ public class ClipboardItemListView : Gtk.TreeView
     public void AddText(string text)
     {
         store.AddText(text);
+    }
+
+    public int TextColumnWidth {
+        get { return Columns[0].FixedWidth; }
+        set { Columns[0].FixedWidth = value; }
     }
 
     private Regex filter;

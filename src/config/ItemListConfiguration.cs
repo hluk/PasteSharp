@@ -34,6 +34,13 @@ public sealed class ItemListConfiguration : ConfigurationSection
         set { MaxItemsInt = (int)value; }
     }
 
+    [ConfigurationProperty("textColumnWidth", DefaultValue = 150)]
+    public int TextColumnWidth
+    {
+        get { return (int)this["textColumnWidth"]; }
+        set { this["textColumnWidth"] = value; }
+    }
+
     [ConfigurationProperty("maxItems", DefaultValue = 100)]
     [IntegerValidator(MinValue = 0, MaxValue = 10000, ExcludeRange = false)]
     private int MaxItemsInt
