@@ -5,15 +5,13 @@ PasteSharp is simple clipboard manager.
 
 NuGet package is [here](https://www.nuget.org/packages/PasteSharp).
 
-Application is written in C# with GUI toolkit Gtk#3 for GUI.
+Application is written in C# with GUI toolkit Gtk#3.
 
 Application is licensed under GPLv3.
 
-To build on Linux run following command.
+To build and run the app execute following commands.
 
-    make CONF=Release nuget tests
-
-To run the app on Linux run following.
-
-    make CONF=Release run
+    nuget restore
+    xbuild /p:Configuration=Release CopySharp.csproj
+    mono bin/Release/CopySharp.exe
 
