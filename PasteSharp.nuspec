@@ -14,4 +14,10 @@
         <copyright>Copyright 2015</copyright>
         <tags>clipboard</tags>
     </metadata>
+    <files>
+        <file src="bin\$configuration$\*.dll" target="lib/net45" />
+        <file src="bin\$configuration$\*.config" target="lib/net45" />
+        <file src="bin\$configuration$\*.pdb" target="lib/net45" />
+        <file src="C:\Deps\gtk\bin\*.dll" target="lib/net45" />
+    </files>
 </package>
