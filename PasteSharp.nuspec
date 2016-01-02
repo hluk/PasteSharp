@@ -11,7 +11,7 @@
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>Simple cross-platform clipboard manager</description>
         <releaseNotes></releaseNotes>
-        <copyright>Copyright 2015</copyright>
+        <copyright>Copyright 2016</copyright>
         <tags>clipboard</tags>
     </metadata>
     <files>
