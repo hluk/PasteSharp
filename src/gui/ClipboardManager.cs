@@ -56,6 +56,16 @@ public class ClipboardManager
         return Clipboard.Get(atom);
     }
 
+    public static byte[] GetClipboardData(string mime)
+    {
+        var atom = Gdk.Atom.Intern(mime, false);
+        var data = GetClipboard().WaitForContents(atom);
+        if (data == null)
+            return new byte[0];
+
+        return data.Data;
+    }
+
     public ClipboardManager()
     {
         GetClipboard().OwnerChange += OnClipboardChanged;

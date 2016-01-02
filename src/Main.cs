@@ -18,6 +18,7 @@
 */
 
 using System;
+using System.IO;
 using System.Reflection;
 
 using Gtk;
@@ -32,14 +33,24 @@ namespace PasteSharp
             Console.WriteLine("PasteSharp is simple cross-platform clipboard manager");
             Console.WriteLine("Usage: " + exe + " [ARGUMENTS]");
             Console.WriteLine("ARGUMENTS:");
-            Console.WriteLine("  -h, --help     Print help.");
-            Console.WriteLine("  -v, --version  Print version.");
+            Console.WriteLine("  -h, --help       Print help.");
+            Console.WriteLine("  -v, --version    Print version.");
+            Console.WriteLine("  -c, --clipboard  Print clipboard text.");
+            Console.WriteLine("  -d, --data MIME  Print clipboard data.");
         }
 
         private static void PrintVersion()
         {
             var name = Assembly.GetExecutingAssembly().GetName();
             Console.WriteLine(name.Name + " " + name.Version);
+        }
+
+        private static void PrintClipboard(string mime)
+        {
+            Application.Init();
+            var data = ClipboardManager.GetClipboardData(mime);
+            Stream stdout = Console.OpenStandardOutput();
+            stdout.Write(data, 0, data.Length);
         }
 
         private static int ParseArguments(string[] args)
@@ -54,6 +65,21 @@ namespace PasteSharp
                     case "-v":
                     case "--version":
                         PrintVersion();
+                        return 0;
+
+                    case "-c":
+                    case "--clipboard":
+                        PrintClipboard("UTF8_STRING");
+                        return 0;
+
+                    default:
+                        break;
+                }
+            } else if (args.Length == 2) {
+                switch (args[0]) {
+                    case "-d":
+                    case "--clipboard-data":
+                        PrintClipboard(args[1]);
                         return 0;
 
                     default:
