@@ -22,23 +22,12 @@ using System.IO;
 using System.Reflection;
 
 using Gtk;
+using Mono.Options;
 
 namespace PasteSharp
 {
     class MainClass
     {
-        private static void PrintHelp()
-        {
-            var exe = System.AppDomain.CurrentDomain.FriendlyName;
-            Console.WriteLine("PasteSharp is simple cross-platform clipboard manager");
-            Console.WriteLine("Usage: " + exe + " [ARGUMENTS]");
-            Console.WriteLine("ARGUMENTS:");
-            Console.WriteLine("  -h, --help       Print help.");
-            Console.WriteLine("  -v, --version    Print version.");
-            Console.WriteLine("  -c, --clipboard  Print clipboard text.");
-            Console.WriteLine("  -d, --data MIME  Print clipboard data.");
-        }
-
         private static void PrintVersion()
         {
             var name = Assembly.GetExecutingAssembly().GetName();
@@ -55,40 +44,44 @@ namespace PasteSharp
 
         private static int ParseArguments(string[] args)
         {
-            if (args.Length == 1) {
-                switch (args[0]) {
-                    case "-h":
-                    case "--help":
-                        PrintHelp();
-                        return 0;
+            bool printHelp = false;
+            bool printVersion = false;
+            string clipboardData = null;
 
-                    case "-v":
-                    case "--version":
-                        PrintVersion();
-                        return 0;
+            var exe = System.AppDomain.CurrentDomain.FriendlyName;
+            var p = new OptionSet() {
+                "PasteSharp is simple cross-platform clipboard manager.",
+                "Usage: " + exe + " [OPTIONS]",
+                "OPTIONS:",
+                { "h|help", "Print help.", v => printHelp = v != null },
+                { "v|version", "Print version.", v => printVersion = v != null },
+                { "c|clipboard:", "Print clipboard text (or data in given format).",
+                    v => clipboardData = v != null ? v : "UTF8_STRING" },
+            };
 
-                    case "-c":
-                    case "--clipboard":
-                        PrintClipboard("UTF8_STRING");
-                        return 0;
-
-                    default:
-                        break;
-                }
-            } else if (args.Length == 2) {
-                switch (args[0]) {
-                    case "-d":
-                    case "--clipboard-data":
-                        PrintClipboard(args[1]);
-                        return 0;
-
-                    default:
-                        break;
-                }
+            string error = "";
+            try {
+                var extraArgs = p.Parse(args);
+                if (extraArgs.Count != 0)
+                    error = "Unknown arguments: " + string.Join(",", extraArgs);
+            } catch (OptionException e) {
+                error = e.Message;
             }
 
-            Console.WriteLine("Error: Unknown command line argument (use --help).");
-            return 1;
+            if (!string.IsNullOrEmpty(error)) {
+                Console.WriteLine("Error: Failed to parse command line arguments: " + error);
+                Console.WriteLine("Note: Use --help arguments to pring help.");
+                return 1;
+            }
+
+            if (printHelp)
+                p.WriteOptionDescriptions(Console.Out);
+            else if (printVersion)
+                PrintVersion();
+            else if (clipboardData != null)
+                PrintClipboard(clipboardData);
+
+            return 0;
         }
 
         private static void CreateMainWindow(ClipboardManager clipboardManager)
