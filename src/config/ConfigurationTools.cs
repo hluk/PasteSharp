@@ -20,7 +20,7 @@
 using System;
 using System.Configuration;
 
-public sealed class ConfigurationTools
+static public class ConfigurationTools
 {
     public static Configuration GetConfiguration()
     {
